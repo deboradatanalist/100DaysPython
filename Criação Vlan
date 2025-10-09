@@ -1,0 +1,140 @@
+# --- Configurações ---
+vlan_inicial_sms = 3001
+vlan_final_sms = 3150
+vlan_inicial_sme = 4001
+vlan_final_sme = 4150
+vlan_inicial = 5001
+vlan_final = 5150
+
+nome_do_arquivo = "comandos_vlan1.txt"
+
+# --- Gerador de Comandos e Salvar em Arquivo ---
+# Abre o arquivo em modo de escrita ('w' para write)
+with open(nome_do_arquivo, "w") as arquivo:
+    # Use um loop para iterar sobre a faixa de VLANs
+    arquivo.write("# 1. Criar interfaces rede SMS VLAN30XX na ether7 REDE SAUDE\n")
+    for vlan_id in range(vlan_inicial_sms, vlan_final_sms + 1):
+        # Formata a string do comando com o ID atual
+        comando = f"/interface vlan add name=VLAN{vlan_id}-SMS vlan-id={vlan_id} interface=ether7"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    arquivo.write("\n # 1. Criar interfaces rede SMS VLAN40XX na ether7 REDE EDUCACAO")
+    for vlan_id in range(vlan_inicial_sme, vlan_final_sme + 1):
+        # Formata a string do comando com o ID atual
+        comando = f"/interface vlan add name=VLAN{vlan_id}-SMS vlan-id={vlan_id} interface=ether7"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    arquivo.write("\n # 1. Criar interfaces rede SMS VLAN50XX na ether7 REDE SMPROS/SMDS/")
+    for vlan_id in range(vlan_inicial, vlan_final + 1):
+        # Formata a string do comando com o ID atual
+        comando = f"/interface vlan add name=VLAN{vlan_id}-SMS vlan-id={vlan_id} interface=ether7"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    arquivo.write("\n# 2. Atribui o endereço IP (Gateway) à VLAN-SMS\n")
+    for vlan_id in range(vlan_inicial_sms, vlan_final_sms + 1):
+        # Formata a string do comando com o ID atual
+        ip_rede = vlan_id - 3000
+        comando = f"/ip address add address=10.30.{ip_rede}.1/24 interface=VLAN{vlan_id}-SMS"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    arquivo.write("\n# 2. Atribui o endereço IP (Gateway) à VLAN-SME\n")
+    for vlan_id in range(vlan_inicial_sme, vlan_final_sme + 1):
+        # Formata a string do comando com o ID atual
+        ip_rede = vlan_id - 4000
+        comando = f"/ip address add address=10.40.{ip_rede}.1/24 interface=VLAN{vlan_id}-SME"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    arquivo.write("\n# 2. Atribui o endereço IP (Gateway) à VLAN-PMCSA\n")
+    for vlan_id in range(vlan_inicial, vlan_final + 1):
+        # Formata a string do comando com o ID atual
+        ip_rede = vlan_id - 5000
+        comando = f"/ip address add address=10.50.{ip_rede}.1/24 interface=VLAN{vlan_id}-PMCSA"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+
+    arquivo.write("\n# 3. Cria o Pool de IPs para a VLAN-SMS\n")
+    for vlan_id in range(vlan_inicial_sms, vlan_final_sms + 1):
+        # Formata a string do comando com o ID atual
+        ip_rede = vlan_id - 3000
+        comando = f"/ip pool add name=POOL-VLAN{vlan_id} ranges=10.30.{ip_rede}.2-10.30.200.254"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+
+    arquivo.write("\n# 3. Cria o Pool de IPs para a VLAN-SME\n")
+    for vlan_id in range(vlan_inicial_sme, vlan_final_sme + 1):
+        # Formata a string do comando com o ID atual
+        ip_rede = vlan_id - 4000
+        comando = f"/ip pool add name=POOL-VLAN{vlan_id} ranges=10.40.{ip_rede}.2-10.40.200.254"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    arquivo.write("\n# 3. Cria o Pool de IPs para a VLAN-OUTROS\n")
+    for vlan_id in range(vlan_inicial, vlan_final + 1):
+        # Formata a string do comando com o ID atual
+        ip_rede = vlan_id - 5000
+        comando = f"/ip pool add name=POOL-VLAN{vlan_id} ranges=10.50.{ip_rede}.2-10.50.200.254"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+
+    arquivo.write("\n# 4. Configura as opções de rede (Gateway, DNS)\n")
+    for vlan_id in range(vlan_inicial_sms, vlan_final_sms + 1):
+        # Formata a string do comando com o ID atual
+        ip_rede = vlan_id - 3000
+        comando = f"/ip dhcp-server network add address=10.30.{ip_rede}.0/24 gateway=10.30.{ip_rede}.1 dns-server=8.8.8.8 comment='Rede VLAN 30'"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    for vlan_id in range(vlan_inicial_sme, vlan_final_sme + 1):
+        # Formata a string do comando com o ID atual
+        ip_rede = vlan_id - 4000
+        comando = f"/ip dhcp-server network add address=10.40.{ip_rede}.0/24 gateway=10.40.{ip_rede}.1 dns-server=8.8.8.8 comment='Rede VLAN 40'"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    for vlan_id in range(vlan_inicial, vlan_final + 1):
+        # Formata a string do comando com o ID atual
+        ip_rede = vlan_id - 5000
+        comando = f"/ip dhcp-server network add address=10.50.{ip_rede}.0/24 gateway=10.50.{ip_rede}.1 dns-server=8.8.8.8 comment='Rede VLAN 50'"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    arquivo.write("\n# 5. Cria e ativa o Servidor DHCP na interface VLAN\n")
+    for vlan_id in range(vlan_inicial_sms, vlan_final_sms + 1):
+        # Formata a string do comando com o ID atual
+        comando = f"/ip dhcp-server add name=DHCP-VLAN{vlan_id} interface={vlan_id}-SMS address-pool=POOL-VLAN{vlan_id} lease-time=1d disabled=no"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    for vlan_id in range(vlan_inicial_sme, vlan_final_sme + 1):
+        # Formata a string do comando com o ID atual
+        comando = f"/ip dhcp-server add name=DHCP-VLAN{vlan_id} interface={vlan_id}-SMS address-pool=POOL-VLAN{vlan_id} lease-time=1d disabled=no"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+    
+    for vlan_id in range(vlan_inicial, vlan_final + 1):
+        # Formata a string do comando com o ID atual
+        comando = f"/ip dhcp-server add name=DHCP-VLAN{vlan_id} interface={vlan_id}-SMS address-pool=POOL-VLAN{vlan_id} lease-time=1d disabled=no"
+        
+        # Escreve o comando no arquivo, seguido por uma nova linha
+        arquivo.write(comando + "\n")
+
+print(f"O arquivo '{nome_do_arquivo}' foi gerado com sucesso.")
