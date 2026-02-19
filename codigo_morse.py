@@ -6,7 +6,7 @@
 
 from typing import List
 
- #Dicionario para os codigos que serão traduzidos
+ #Dicionario para os codigos que serão traduzidos em ordem de prioridade
 dic_morse = {
     ".": "E",
     "-": "T",
