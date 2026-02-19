@@ -1,6 +1,6 @@
 #The Gauss Challenge
 soma = 0
-for number in range(1,101):
-   soma += number
+for numbers in range(1,101):
+   soma += numbers
    
-print(soma) 
+print(f"A soma de 1 ate 100 é: {soma}") 
