@@ -1,35 +1,33 @@
 import random
+#Ou "from palavras_jogo_forca import palavra " Nao precisava colocar na linha 73 "palavras_jogo_forca.palavra" colocaria apenas "palavra"
 import palavras_jogo_forca
+from logo_jogo_forca import logo_forca
 
-forca = [
-            '''   
+forca = ['''   
         +---+
         |   |
         O   |
-       /|\  |
-       / \  |
+       /|\\  |
+       / \\  |
             |
         =========
-''', 
-        '''   
+''','''   
         +---+
         |   |
         O   |
-       /|\  |
+       /|\\  |
        /    |
             |
         =========
-''', 
-        '''   
+''','''   
         +---+
         |   |
         O   |
-       /|\  |
+       /|\\  |
             |
             |
         =========
-''',
-        '''   
+''','''   
         +---+
         |   |
         O   |
@@ -37,8 +35,7 @@ forca = [
             |
             |
         =========
-''', 
-'''   
+''','''   
         +---+
         |   |
         O   |
@@ -46,8 +43,7 @@ forca = [
             |
             |
         =========
-''',
-         '''   
+''','''   
         +---+
         |   |
         O   |
@@ -55,20 +51,18 @@ forca = [
             |
             |
         =========
-''' ,        
-'''
+''','''
         +---+
         |   |
             |
             |
             |
             |
-        =========
-         
+        =========         
 '''
-
 ]
 
+print(logo_forca)
 palavra_escohida= random.choice(palavras_jogo_forca.palavra)
 
 
@@ -90,6 +84,23 @@ while not game_over:
 
     #Teste para saber se a letra que o usuario digitou esta na palavra escolhida aleatoriamente pelo programa
     display = ""
+    
+    if letra in  letras_corretas:
+        print(f"A Letra {letra.upper()} já foi escolhida. Digite OUTRA letra")
+        print(f"{forca[lifes]}")
+    elif letra in palavra_escohida:
+        print(f"A Letra {letra.upper()} está CERTA")
+        print(f"{forca[lifes]}")
+    else:
+        lifes -= 1
+        print(f"{forca[lifes]}")   
+        if lifes == 0:
+            game_over = True
+            print("************************You Lose************************")
+            print(f"A palavra correta era {palavra_escohida.upper()}")
+            break
+    
+    
     for let in palavra_escohida:
         if let == letra:
             display += letra
@@ -103,18 +114,10 @@ while not game_over:
         
     if "_" not in display:
         game_over = True
-        print("You Win!")
+        print("************************You Win!************************")
+        break
 
-    if letra in palavra_escohida:
-        print(f"A Letra {letra.upper()} está CERTA")
-        print(f"{forca[lifes]}")        
-    else:
-        lifes -= 1
-        print(f"{forca[lifes]}")   
-        if lifes == 0:
-            game_over = True
-            print("You Lose")
-            print(f"A palavra correta era {palavra_escohida.upper()}")
+    
     
     
 
